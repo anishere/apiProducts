@@ -36,3 +36,7 @@ D:\Asp.net\apiProducts\apiProducts\obj\Debug\net6.0\refint\apiProducts.dll
 D:\Asp.net\apiProducts\apiProducts\obj\Debug\net6.0\apiProducts.pdb
 D:\Asp.net\apiProducts\apiProducts\obj\Debug\net6.0\apiProducts.genruntimeconfig.cache
 D:\Asp.net\apiProducts\apiProducts\obj\Debug\net6.0\ref\apiProducts.dll
+D:\Asp.net\apiProducts\apiProducts\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Asp.net\apiProducts\apiProducts\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+D:\Asp.net\apiProducts\apiProducts\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+D:\Asp.net\apiProducts\apiProducts\bin\Debug\net6.0\System.Security.Permissions.dll
