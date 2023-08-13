@@ -19,17 +19,24 @@ namespace apiProducts.Controllers
 
         [HttpGet]
         [Route("ProductList")]
-
-        public Response GetAllProducts ()
+        public Response GetProductsByPage(int page = 1, int pageSize = 20)
         {
             List<Products> lstproducts = new List<Products>();
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Products", connection);
+
+            int startIndex = (page - 1) * pageSize;
+
+            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Products ORDER BY ProductID OFFSET @StartIndex ROWS FETCH NEXT @PageSize ROWS ONLY", connection);
+            da.SelectCommand.Parameters.AddWithValue("@StartIndex", startIndex);
+            da.SelectCommand.Parameters.AddWithValue("@PageSize", pageSize);
+
             DataTable dt = new DataTable();
             da.Fill(dt);
+
             Response response = new Response();
-            if(dt.Rows.Count > 0) {
-                for(int i = 0; i < dt.Rows.Count; i++)
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     Products products = new Products();
                     products.ProductID = Convert.ToInt32(dt.Rows[i]["ProductID"]);
@@ -43,18 +50,10 @@ namespace apiProducts.Controllers
                     products.Type = Convert.ToString(dt.Rows[i]["Type"]);
                     lstproducts.Add(products);
                 }
-                if(lstproducts.Count > 0)
-                {
-                    response.StatusCode = 200;
-                    response.StatusMessage = "Data found";
-                    response.listproducts = lstproducts;
-                }
-                else
-                {
-                    response.StatusCode = 100;
-                    response.StatusMessage = "No data found";
-                    response.listproducts = null;
-                }
+
+                response.StatusCode = 200;
+                response.StatusMessage = "Data found";
+                response.listproducts = lstproducts;
             }
             else
             {
@@ -62,8 +61,10 @@ namespace apiProducts.Controllers
                 response.StatusMessage = "No data found";
                 response.listproducts = null;
             }
+
             return response;
         }
+
 
         [HttpPost]
         [Route("AddProduct")]
