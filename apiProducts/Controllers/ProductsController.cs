@@ -48,6 +48,7 @@ namespace apiProducts.Controllers
                     products.Price = Convert.ToDecimal(dt.Rows[i]["Price"]);
                     products.Image = Convert.ToString(dt.Rows[i]["Image"]);
                     products.Type = Convert.ToString(dt.Rows[i]["Type"]);
+                    products.BaoHanh = Convert.ToString(dt.Rows[i]["BaoHanh"]);
                     lstproducts.Add(products);
                 }
 
@@ -78,8 +79,8 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "INSERT INTO Products (ProductName, Discription, Detail, Brand, Discount, Price, Image, Type) " +
-                               "VALUES (@ProductName, @Discription, @Detail, @Brand, @Discount, @Price, @Image, @Type)";
+                string query = "INSERT INTO Products (ProductName, Discription, Detail, Brand, Discount, Price, Image, Type, BaoHanh) " +
+                               "VALUES (@ProductName, @Discription, @Detail, @Brand, @Discount, @Price, @Image, @Type, @BaoHanh)";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
@@ -91,6 +92,7 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@Price", obj.Price);
                     cmd.Parameters.AddWithValue("@Image", obj.Image);
                     cmd.Parameters.AddWithValue("@Type", obj.Type);
+                    cmd.Parameters.AddWithValue("@BaoHanh", obj.BaoHanh);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
 
@@ -177,7 +179,8 @@ namespace apiProducts.Controllers
                 string query = "UPDATE Products " +
                                "SET ProductName = @ProductName, Discription = @Discription, " +
                                "Detail = @Detail, Brand = @Brand, Discount = @Discount, " +
-                               "Price = @Price, Image = @Image, Type = @Type " +
+                               "Price = @Price, Image = @Image, Type = @Type, " +
+                               "BaoHanh = @BaoHanh " +
                                "WHERE ProductID = @ProductID";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
@@ -191,6 +194,7 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@Price", updatedProduct.Price);
                     cmd.Parameters.AddWithValue("@Image", updatedProduct.Image);
                     cmd.Parameters.AddWithValue("@Type", updatedProduct.Type);
+                    cmd.Parameters.AddWithValue("@BaoHanh", updatedProduct.BaoHanh);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
 
