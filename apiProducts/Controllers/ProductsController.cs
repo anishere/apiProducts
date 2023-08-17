@@ -21,12 +21,12 @@ namespace apiProducts.Controllers
         [Route("ProductList")]
         public Response GetProductsByPage(int page = 1, int pageSize = 20)
         {
-            List<Products> lstproducts = new List<Products>();
+            List<ProductsPcLaptop> lstproducts = new List<ProductsPcLaptop>();
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
 
             int startIndex = (page - 1) * pageSize;
 
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Products ORDER BY ProductID OFFSET @StartIndex ROWS FETCH NEXT @PageSize ROWS ONLY", connection);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM ProductsPCLapTop ORDER BY ProductID OFFSET @StartIndex ROWS FETCH NEXT @PageSize ROWS ONLY", connection);
             da.SelectCommand.Parameters.AddWithValue("@StartIndex", startIndex);
             da.SelectCommand.Parameters.AddWithValue("@PageSize", pageSize);
 
@@ -38,17 +38,28 @@ namespace apiProducts.Controllers
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    Products products = new Products();
+                    ProductsPcLaptop products = new ProductsPcLaptop();
                     products.ProductID = Convert.ToInt32(dt.Rows[i]["ProductID"]);
                     products.ProductName = Convert.ToString(dt.Rows[i]["ProductName"]);
                     products.Discription = Convert.ToString(dt.Rows[i]["Discription"]);
-                    products.Detail = Convert.ToString(dt.Rows[i]["Detail"]);
                     products.Brand = Convert.ToString(dt.Rows[i]["Brand"]);
                     products.Discount = Convert.ToDecimal(dt.Rows[i]["Discount"]);
                     products.Price = Convert.ToDecimal(dt.Rows[i]["Price"]);
                     products.Image = Convert.ToString(dt.Rows[i]["Image"]);
                     products.Type = Convert.ToString(dt.Rows[i]["Type"]);
                     products.BaoHanh = Convert.ToString(dt.Rows[i]["BaoHanh"]);
+                    products.CPU = Convert.ToString(dt.Rows[i]["CPU"]);
+                    products.RAM = Convert.ToString(dt.Rows[i]["RAM"]);
+                    products.ManHinh = Convert.ToString(dt.Rows[i]["ManHinh"]);
+                    products.HeDieuHanh = Convert.ToString(dt.Rows[i]["HeDieuHanh"]);
+                    products.KhoiLuong = Convert.ToString(dt.Rows[i]["KhoiLuong"]);
+                    products.CardDoHoa = Convert.ToString(dt.Rows[i]["CardDoHoa"]);
+                    products.BanPhim = Convert.ToString(dt.Rows[i]["BanPhim"]);
+                    products.MauSac = Convert.ToString(dt.Rows[i]["MauSac"]);
+                    products.NhuCau = Convert.ToString(dt.Rows[i]["NhuCau"]);
+                    products.LuuTru = Convert.ToString(dt.Rows[i]["LuuTru"]);
+                    products.PhuKien = Convert.ToString(dt.Rows[i]["PhuKien"]);
+                    products.KieuKetNoi = Convert.ToString(dt.Rows[i]["KieuKetNoi"]);
                     lstproducts.Add(products);
                 }
 
@@ -66,11 +77,9 @@ namespace apiProducts.Controllers
             return response;
         }
 
-
-        [HttpPost]
-        [Route("AddProduct")]
-
-        public Response AddProduct(Products obj)
+        [HttpGet]
+        [Route("GetProductById/{id}")]
+        public Response GetProductById(int id)
         {
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
             Response response = new Response();
@@ -79,20 +88,107 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "INSERT INTO Products (ProductName, Discription, Detail, Brand, Discount, Price, Image, Type, BaoHanh) " +
-                               "VALUES (@ProductName, @Discription, @Detail, @Brand, @Discount, @Price, @Image, @Type, @BaoHanh)";
+                string query = "SELECT * FROM ProductsPCLapTop WHERE ProductID = @ProductID";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", id);
+
+                    DataTable dt = new DataTable();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        DataRow row = dt.Rows[0];
+                        ProductsPcLaptop product = new ProductsPcLaptop()
+                        {
+                            ProductID = Convert.ToInt32(row["ProductID"]),
+                            ProductName = Convert.ToString(row["ProductName"]),
+                            Discription = Convert.ToString(row["Discription"]),
+                            Brand = Convert.ToString(row["Brand"]),
+                            Discount = Convert.ToDecimal(row["Discount"]),
+                            Price = Convert.ToDecimal(row["Price"]),
+                            Image = Convert.ToString(row["Image"]),
+                            Type = Convert.ToString(row["Type"]),
+                            BaoHanh = Convert.ToString(row["BaoHanh"]),
+                            CPU = Convert.ToString(row["CPU"]),
+                            RAM = Convert.ToString(row["RAM"]),
+                            ManHinh = Convert.ToString(row["ManHinh"]),
+                            HeDieuHanh = Convert.ToString(row["HeDieuHanh"]),
+                            KhoiLuong = Convert.ToString(row["KhoiLuong"]),
+                            CardDoHoa = Convert.ToString(row["CardDoHoa"]),
+                            BanPhim = Convert.ToString(row["BanPhim"]),
+                            MauSac = Convert.ToString(row["MauSac"]),
+                            NhuCau = Convert.ToString(row["NhuCau"]),
+                            LuuTru = Convert.ToString(row["LuuTru"]),
+                            PhuKien = Convert.ToString(row["PhuKien"]),
+                            KieuKetNoi = Convert.ToString(row["KieuKetNoi"])
+                        };
+
+                        response.StatusCode = 200;
+                        response.StatusMessage = "Product found";
+                        response.listproducts = new List<ProductsPcLaptop> { product };
+                    }
+                    else
+                    {
+                        response.StatusCode = 100;
+                        response.StatusMessage = "Product not found";
+                        response.listproducts = null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 500;
+                response.StatusMessage = "An error occurred: " + ex.Message;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return response;
+        }
+
+
+        [HttpPost]
+        [Route("AddProduct")]
+
+        public Response AddProduct(ProductsPcLaptop obj)
+        {
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
+            Response response = new Response();
+
+            try
+            {
+                connection.Open();
+
+                string query = "INSERT INTO ProductsPCLapTop (ProductName, Discription, Brand, Discount, Price, Image, Type, BaoHanh, CPU, RAM, ManHinh, HeDieuHanh, KhoiLuong, CardDoHoa, BanPhim, MauSac, NhuCau, LuuTru, PhuKien, KieuKetNoi) " +
+                               "VALUES (@ProductName, @Discription, @Brand, @Discount, @Price, @Image, @Type, @BaoHanh, @CPU, @RAM, @ManHinh, @HeDieuHanh, @KhoiLuong, @CardDoHoa, @BanPhim, @MauSac, @NhuCau, @LuuTru, @PhuKien, @KieuKetNoi)";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@ProductName", obj.ProductName);
                     cmd.Parameters.AddWithValue("@Discription", obj.Discription);
-                    cmd.Parameters.AddWithValue("@Detail", obj.Detail);
                     cmd.Parameters.AddWithValue("@Brand", obj.Brand);
                     cmd.Parameters.AddWithValue("@Discount", obj.Discount);
                     cmd.Parameters.AddWithValue("@Price", obj.Price);
                     cmd.Parameters.AddWithValue("@Image", obj.Image);
                     cmd.Parameters.AddWithValue("@Type", obj.Type);
                     cmd.Parameters.AddWithValue("@BaoHanh", obj.BaoHanh);
+                    cmd.Parameters.AddWithValue("@CPU", obj.CPU);
+                    cmd.Parameters.AddWithValue("@RAM", obj.RAM);
+                    cmd.Parameters.AddWithValue("@ManHinh", obj.ManHinh);
+                    cmd.Parameters.AddWithValue("@HeDieuHanh", obj.HeDieuHanh);
+                    cmd.Parameters.AddWithValue("@KhoiLuong", obj.KhoiLuong);
+                    cmd.Parameters.AddWithValue("@CardDoHoa", obj.CardDoHoa);
+                    cmd.Parameters.AddWithValue("@BanPhim", obj.BanPhim);
+                    cmd.Parameters.AddWithValue("@MauSac", obj.MauSac);
+                    cmd.Parameters.AddWithValue("@NhuCau", obj.NhuCau);
+                    cmd.Parameters.AddWithValue("@LuuTru", obj.LuuTru);
+                    cmd.Parameters.AddWithValue("@PhuKien", obj.PhuKien);
+                    cmd.Parameters.AddWithValue("@KieuKetNoi", obj.KieuKetNoi);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
 
@@ -132,7 +228,7 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "DELETE FROM Products WHERE ProductID = @ProductID";
+                string query = "DELETE FROM ProductsPCLapTop WHERE ProductID = @ProductID";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
@@ -167,7 +263,7 @@ namespace apiProducts.Controllers
 
         [HttpPut]
         [Route("UpdateProduct/{id}")]
-        public Response UpdateProduct(int id, Products updatedProduct)
+        public Response UpdateProduct(int id, ProductsPcLaptop updatedProduct)
         {
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
             Response response = new Response();
@@ -176,11 +272,14 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "UPDATE Products " +
+                string query = "UPDATE ProductsPCLapTop " +
                                "SET ProductName = @ProductName, Discription = @Discription, " +
-                               "Detail = @Detail, Brand = @Brand, Discount = @Discount, " +
+                               "Brand = @Brand, Discount = @Discount, " +
                                "Price = @Price, Image = @Image, Type = @Type, " +
-                               "BaoHanh = @BaoHanh " +
+                               "BaoHanh = @BaoHanh, CPU = @CPU, RAM = @RAM, " +
+                               "ManHinh = @ManHinh, HeDieuHanh = @HeDieuHanh, KhoiLuong = @KhoiLuong, " +
+                               "CardDoHoa = @CardDoHoa, BanPhim = @BanPhim, MauSac = @MauSac, " +
+                               "NhuCau = @NhuCau, LuuTru = @LuuTru, PhuKien = @PhuKien, KieuKetNoi = @KieuKetNoi " +
                                "WHERE ProductID = @ProductID";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
@@ -188,13 +287,24 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@ProductID", id);
                     cmd.Parameters.AddWithValue("@ProductName", updatedProduct.ProductName);
                     cmd.Parameters.AddWithValue("@Discription", updatedProduct.Discription);
-                    cmd.Parameters.AddWithValue("@Detail", updatedProduct.Detail);
                     cmd.Parameters.AddWithValue("@Brand", updatedProduct.Brand);
                     cmd.Parameters.AddWithValue("@Discount", updatedProduct.Discount);
                     cmd.Parameters.AddWithValue("@Price", updatedProduct.Price);
                     cmd.Parameters.AddWithValue("@Image", updatedProduct.Image);
                     cmd.Parameters.AddWithValue("@Type", updatedProduct.Type);
                     cmd.Parameters.AddWithValue("@BaoHanh", updatedProduct.BaoHanh);
+                    cmd.Parameters.AddWithValue("@CPU", updatedProduct.CPU);
+                    cmd.Parameters.AddWithValue("@RAM", updatedProduct.RAM);
+                    cmd.Parameters.AddWithValue("@ManHinh", updatedProduct.ManHinh);
+                    cmd.Parameters.AddWithValue("@HeDieuHanh", updatedProduct.HeDieuHanh);
+                    cmd.Parameters.AddWithValue("@KhoiLuong", updatedProduct.KhoiLuong);
+                    cmd.Parameters.AddWithValue("@CardDoHoa", updatedProduct.CardDoHoa);
+                    cmd.Parameters.AddWithValue("@BanPhim", updatedProduct.BanPhim);
+                    cmd.Parameters.AddWithValue("@MauSac", updatedProduct.MauSac);
+                    cmd.Parameters.AddWithValue("@NhuCau", updatedProduct.NhuCau);
+                    cmd.Parameters.AddWithValue("@LuuTru", updatedProduct.LuuTru);
+                    cmd.Parameters.AddWithValue("@PhuKien", updatedProduct.PhuKien);
+                    cmd.Parameters.AddWithValue("@KieuKetNoi", updatedProduct.KieuKetNoi);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
 

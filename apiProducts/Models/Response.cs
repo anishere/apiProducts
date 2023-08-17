@@ -6,7 +6,7 @@
 
         public string? StatusMessage { get; set; }
 
-        public List<Products>? listproducts { get; set; }
+        public List<ProductsPcLaptop>? listproducts { get; set; }
 
         public List<InformationCustomer>? listcustomers { get; set; }
     }
