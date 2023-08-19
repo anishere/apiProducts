@@ -9,5 +9,7 @@
         public List<ProductsPcLaptop>? listproducts { get; set; }
 
         public List<InformationCustomer>? listcustomers { get; set; }
+
+        public List<ProductsCPU>? listcpu { get; set; }
     }
 }

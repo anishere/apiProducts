@@ -26,6 +26,8 @@
 
         public string? ManHinh { get; set; }
 
+        public string? PIN { get; set; }
+
         public string? HeDieuHanh { get; set;}
 
         public string? KhoiLuong { get; set; }
@@ -43,5 +45,7 @@
         public string? PhuKien { get; set; }
 
         public string? KieuKetNoi { get; set; }
+
+        public DateTime NgayNhap { get; set; }
     }
 }
