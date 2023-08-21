@@ -11,5 +11,19 @@
         public List<InformationCustomer>? listcustomers { get; set; }
 
         public List<ProductsCPU>? listcpu { get; set; }
+
+        public List<ProductsKeyboard>? listKeyBoard { get; set; }
+
+        public List<ProductsMouse>? listMouse { get; set; }
+
+        public List<ProductsRAM>? listram { get; set; }
+
+        public List<ProductsTaiNghe>? listTaiNghe { get; set; }
+
+        public List<Message>? listMessage { get; set; }
+
+        public InfoShop? InfoShop { get; set; }
+
+        public About? About { get; set; }
     }
 }

@@ -41,7 +41,7 @@ namespace apiProducts.Controllers
                     ProductsPcLaptop products = new ProductsPcLaptop();
                     products.ProductID = Convert.ToInt32(dt.Rows[i]["ProductID"]);
                     products.ProductName = Convert.ToString(dt.Rows[i]["ProductName"]);
-                    products.Discription = Convert.ToString(dt.Rows[i]["Discription"]);
+                    products.Description = Convert.ToString(dt.Rows[i]["Description"]);
                     products.Brand = Convert.ToString(dt.Rows[i]["Brand"]);
                     products.Discount = Convert.ToDecimal(dt.Rows[i]["Discount"]);
                     products.Price = Convert.ToDecimal(dt.Rows[i]["Price"]);
@@ -102,7 +102,7 @@ namespace apiProducts.Controllers
                         ProductsPcLaptop product = new ProductsPcLaptop();
                         product.ProductID = Convert.ToInt32(reader["ProductID"]);
                         product.ProductName = Convert.ToString(reader["ProductName"]);
-                        product.Discription = Convert.ToString(reader["Discription"]);
+                        product.Description = Convert.ToString(reader["Description"]);
                         product.Brand = Convert.ToString(reader["Brand"]);
                         product.Discount = Convert.ToDecimal(reader["Discount"]);
                         product.Price = Convert.ToDecimal(reader["Price"]);
@@ -185,7 +185,7 @@ namespace apiProducts.Controllers
                         {
                             ProductID = Convert.ToInt32(row["ProductID"]),
                             ProductName = Convert.ToString(row["ProductName"]),
-                            Discription = Convert.ToString(row["Discription"]),
+                            Description = Convert.ToString(row["Description"]),
                             Brand = Convert.ToString(row["Brand"]),
                             Discount = Convert.ToDecimal(row["Discount"]),
                             Price = Convert.ToDecimal(row["Price"]),
@@ -245,13 +245,13 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "INSERT INTO ProductsPCLapTop (ProductName, Discription, Brand, Discount, Price, Image, Type, BaoHanh, CPU, RAM, ManHinh, PIN, HeDieuHanh, KhoiLuong, CardDoHoa, BanPhim, MauSac, NhuCau, LuuTru, PhuKien, KieuKetNoi, NgayNhap) " +
-                               "VALUES (@ProductName, @Discription, @Brand, @Discount, @Price, @Image, @Type, @BaoHanh, @CPU, @RAM, @ManHinh, @PIN, @HeDieuHanh, @KhoiLuong, @CardDoHoa, @BanPhim, @MauSac, @NhuCau, @LuuTru, @PhuKien, @KieuKetNoi, @NgayNhap)";
+                string query = "INSERT INTO ProductsPCLapTop (ProductName, Description, Brand, Discount, Price, Image, Type, BaoHanh, CPU, RAM, ManHinh, PIN, HeDieuHanh, KhoiLuong, CardDoHoa, BanPhim, MauSac, NhuCau, LuuTru, PhuKien, KieuKetNoi, NgayNhap) " +
+                               "VALUES (@ProductName, @Description, @Brand, @Discount, @Price, @Image, @Type, @BaoHanh, @CPU, @RAM, @ManHinh, @PIN, @HeDieuHanh, @KhoiLuong, @CardDoHoa, @BanPhim, @MauSac, @NhuCau, @LuuTru, @PhuKien, @KieuKetNoi, @NgayNhap)";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@ProductName", obj.ProductName);
-                    cmd.Parameters.AddWithValue("@Discription", obj.Discription);
+                    cmd.Parameters.AddWithValue("@Description", obj.Description);
                     cmd.Parameters.AddWithValue("@Brand", obj.Brand);
                     cmd.Parameters.AddWithValue("@Discount", obj.Discount);
                     cmd.Parameters.AddWithValue("@Price", obj.Price);
@@ -356,7 +356,7 @@ namespace apiProducts.Controllers
                 connection.Open();
 
                 string query = "UPDATE ProductsPCLapTop " +
-                               "SET ProductName = @ProductName, Discription = @Discription, " +
+                               "SET ProductName = @ProductName, Description = @Description, " +
                                "Brand = @Brand, Discount = @Discount, " +
                                "Price = @Price, Image = @Image, Type = @Type, " +
                                "BaoHanh = @BaoHanh, CPU = @CPU, RAM = @RAM, " +
@@ -369,7 +369,7 @@ namespace apiProducts.Controllers
                 {
                     cmd.Parameters.AddWithValue("@ProductID", id);
                     cmd.Parameters.AddWithValue("@ProductName", updatedProduct.ProductName);
-                    cmd.Parameters.AddWithValue("@Discription", updatedProduct.Discription);
+                    cmd.Parameters.AddWithValue("@Description", updatedProduct.Description);
                     cmd.Parameters.AddWithValue("@Brand", updatedProduct.Brand);
                     cmd.Parameters.AddWithValue("@Discount", updatedProduct.Discount);
                     cmd.Parameters.AddWithValue("@Price", updatedProduct.Price);

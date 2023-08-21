@@ -8,26 +8,25 @@ namespace apiProducts.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsCPUController : ControllerBase
+    public class ProductsKeyBoardController : ControllerBase
     {
-
         private readonly IConfiguration _configuration;
 
-        public ProductsCPUController(IConfiguration configuration)
+        public ProductsKeyBoardController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         [HttpGet]
-        [Route("ListCPU")]
+        [Route("ListKeyBoard")]
         public Response GetProductsByPage(int page = 1, int pageSize = 20)
         {
-            List<ProductsCPU> lstproducts = new List<ProductsCPU>();
+            List<ProductsKeyboard> lstproducts = new List<ProductsKeyboard>();
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
 
             int startIndex = (page - 1) * pageSize;
 
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM ProductsCPU ORDER BY ProductID OFFSET @StartIndex ROWS FETCH NEXT @PageSize ROWS ONLY", connection);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM ProductsKeyboard ORDER BY ProductID OFFSET @StartIndex ROWS FETCH NEXT @PageSize ROWS ONLY", connection);
             da.SelectCommand.Parameters.AddWithValue("@StartIndex", startIndex);
             da.SelectCommand.Parameters.AddWithValue("@PageSize", pageSize);
 
@@ -39,45 +38,43 @@ namespace apiProducts.Controllers
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    ProductsCPU products = new ProductsCPU();
+                    ProductsKeyboard products = new ProductsKeyboard();
                     products.ProductID = Convert.ToInt32(dt.Rows[i]["ProductID"]);
                     products.ProductName = Convert.ToString(dt.Rows[i]["ProductName"]);
                     products.Description = Convert.ToString(dt.Rows[i]["Description"]);
                     products.Brand = Convert.ToString(dt.Rows[i]["Brand"]);
                     products.Discount = Convert.ToDecimal(dt.Rows[i]["Discount"]);
                     products.Price = Convert.ToDecimal(dt.Rows[i]["Price"]);
-                    products.Image = Convert.ToString(dt.Rows[i]["Image"]);
                     products.BaoHanh = Convert.ToString(dt.Rows[i]["BaoHanh"]);
-                    products.SocKet = Convert.ToString(dt.Rows[i]["SocKet"]);
-                    products.SoNhan = Convert.ToString(dt.Rows[i]["SoNhan"]);
-                    products.SoLuong = Convert.ToString(dt.Rows[i]["SoLuong"]);
-                    products.KienTruc = Convert.ToString(dt.Rows[i]["KienTruc"]);
-                    products.TocDo = Convert.ToString(dt.Rows[i]["TocDo"]);
-                    products.Cache = Convert.ToString(dt.Rows[i]["Cache"]);
-                    products.ChipDoHoa = Convert.ToString(dt.Rows[i]["ChipDoHoa"]);
-                    products.TDP = Convert.ToString(dt.Rows[i]["TDP"]);
-                    products.BoNhoHoTro = Convert.ToString(dt.Rows[i]["BoNhoHoTro"]);
+                    products.Image = Convert.ToString(dt.Rows[i]["Image"]);
+                    products.Switch = Convert.ToString(dt.Rows[i]["Switch"]);
+                    products.MauSac = Convert.ToString(dt.Rows[i]["MauSac"]);
+                    products.KieuKetNoi = Convert.ToString(dt.Rows[i]["KieuKetNoi"]);
+                    products.DenLed = Convert.ToString(dt.Rows[i]["DenLed"]);
+                    products.KeTay = Convert.ToString(dt.Rows[i]["KeTay"]);
+                    products.KichThuoc = Convert.ToString(dt.Rows[i]["KichThuoc"]);
+                    products.Type = Convert.ToString(dt.Rows[i]["Type"]);
                     products.NgayNhap = Convert.ToDateTime(dt.Rows[i]["NgayNhap"]);
                     lstproducts.Add(products);
                 }
 
                 response.StatusCode = 200;
                 response.StatusMessage = "Data found";
-                response.listcpu = lstproducts;
+                response.listKeyBoard = lstproducts;
             }
             else
             {
                 response.StatusCode = 100;
                 response.StatusMessage = "No data found";
-                response.listcpu = null;
+                response.listKeyBoard = null;
             }
 
             return response;
         }
 
         [HttpGet]
-        [Route("GetCPUById/{id}")]
-        public Response GetCPUById(int id)
+        [Route("GetKeyBoardById/{id}")]
+        public Response GetKeyBoardById(int id)
         {
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
             Response response = new Response();
@@ -86,7 +83,7 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "SELECT * FROM ProductsCPU WHERE ProductID = @ProductID";
+                string query = "SELECT * FROM ProductsKeyboard WHERE ProductID = @ProductID";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
@@ -96,35 +93,33 @@ namespace apiProducts.Controllers
 
                     if (reader.Read())
                     {
-                        ProductsCPU product = new ProductsCPU();
+                        ProductsKeyboard product = new ProductsKeyboard();
                         product.ProductID = Convert.ToInt32(reader["ProductID"]);
                         product.ProductName = Convert.ToString(reader["ProductName"]);
                         product.Description = Convert.ToString(reader["Description"]);
                         product.Brand = Convert.ToString(reader["Brand"]);
                         product.Discount = Convert.ToDecimal(reader["Discount"]);
                         product.Price = Convert.ToDecimal(reader["Price"]);
-                        product.Image = Convert.ToString(reader["Image"]);
                         product.BaoHanh = Convert.ToString(reader["BaoHanh"]);
-                        product.SocKet = Convert.ToString(reader["SocKet"]);
-                        product.SoNhan = Convert.ToString(reader["SoNhan"]);
-                        product.SoLuong = Convert.ToString(reader["SoLuong"]);
-                        product.KienTruc = Convert.ToString(reader["KienTruc"]);
-                        product.TocDo = Convert.ToString(reader["TocDo"]);
-                        product.Cache = Convert.ToString(reader["Cache"]);
-                        product.ChipDoHoa = Convert.ToString(reader["ChipDoHoa"]);
-                        product.TDP = Convert.ToString(reader["TDP"]);
-                        product.BoNhoHoTro = Convert.ToString(reader["BoNhoHoTro"]);
+                        product.Image = Convert.ToString(reader["Image"]);
+                        product.Switch = Convert.ToString(reader["Switch"]);
+                        product.MauSac = Convert.ToString(reader["MauSac"]);
+                        product.KieuKetNoi = Convert.ToString(reader["KieuKetNoi"]);
+                        product.DenLed = Convert.ToString(reader["DenLed"]);
+                        product.KeTay = Convert.ToString(reader["KeTay"]);
+                        product.KichThuoc = Convert.ToString(reader["KichThuoc"]);
+                        product.Type = Convert.ToString(reader["Type"]);
                         product.NgayNhap = Convert.ToDateTime(reader["NgayNhap"]);
 
                         response.StatusCode = 200;
                         response.StatusMessage = "Product found";
-                        response.listcpu = new List<ProductsCPU> { product };
+                        response.listKeyBoard = new List<ProductsKeyboard> { product };
                     }
                     else
                     {
                         response.StatusCode = 100;
                         response.StatusMessage = "Product not found";
-                        response.listcpu = null;
+                        response.listKeyBoard = null;
                     }
 
                     reader.Close();
@@ -145,8 +140,8 @@ namespace apiProducts.Controllers
 
 
         [HttpPost]
-        [Route("AddCPU")]
-        public Response AddProduct(ProductsCPU obj)
+        [Route("AddKeyBoard")]
+        public Response AddProduct(ProductsKeyboard obj)
         {
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
             Response response = new Response();
@@ -155,8 +150,8 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "INSERT INTO ProductsCPU (ProductName, Description, Brand, Discount, Price, Image, BaoHanh, SocKet, SoNhan, SoLuong, KienTruc, TocDo, Cache, ChipDoHoa, TDP, BoNhoHoTro, NgayNhap) " +
-                               "VALUES (@ProductName, @Description, @Brand, @Discount, @Price, @Image, @BaoHanh, @SocKet, @SoNhan, @SoLuong, @KienTruc, @TocDo, @Cache, @ChipDoHoa, @TDP, @BoNhoHoTro, @NgayNhap)";
+                string query = "INSERT INTO ProductsKeyboard (ProductName, Description, Brand, Discount, Price, BaoHanh, Image, Switch, MauSac, KieuKetNoi, DenLed, KeTay, KichThuoc, Type, NgayNhap) " +
+                               "VALUES (@ProductName, @Description, @Brand, @Discount, @Price, @BaoHanh, @Image, @Switch, @MauSac, @KieuKetNoi, @DenLed, @KeTay, @KichThuoc, @Type, @NgayNhap)";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
@@ -165,17 +160,15 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@Brand", obj.Brand);
                     cmd.Parameters.AddWithValue("@Discount", obj.Discount);
                     cmd.Parameters.AddWithValue("@Price", obj.Price);
-                    cmd.Parameters.AddWithValue("@Image", obj.Image);
                     cmd.Parameters.AddWithValue("@BaoHanh", obj.BaoHanh);
-                    cmd.Parameters.AddWithValue("@SocKet", obj.SocKet);
-                    cmd.Parameters.AddWithValue("@SoNhan", obj.SoNhan);
-                    cmd.Parameters.AddWithValue("@SoLuong", obj.SoLuong);
-                    cmd.Parameters.AddWithValue("@KienTruc", obj.KienTruc);
-                    cmd.Parameters.AddWithValue("@TocDo", obj.TocDo);
-                    cmd.Parameters.AddWithValue("@Cache", obj.Cache);
-                    cmd.Parameters.AddWithValue("@ChipDoHoa", obj.ChipDoHoa);
-                    cmd.Parameters.AddWithValue("@TDP", obj.TDP);
-                    cmd.Parameters.AddWithValue("@BoNhoHoTro", obj.BoNhoHoTro);
+                    cmd.Parameters.AddWithValue("@Image", obj.Image);
+                    cmd.Parameters.AddWithValue("@Switch", obj.Switch);
+                    cmd.Parameters.AddWithValue("@MauSac", obj.MauSac);
+                    cmd.Parameters.AddWithValue("@KieuKetNoi", obj.KieuKetNoi);
+                    cmd.Parameters.AddWithValue("@DenLed", obj.DenLed);
+                    cmd.Parameters.AddWithValue("@KeTay", obj.KeTay);
+                    cmd.Parameters.AddWithValue("@KichThuoc", obj.KichThuoc);
+                    cmd.Parameters.AddWithValue("@Type", obj.Type);
                     cmd.Parameters.AddWithValue("@NgayNhap", obj.NgayNhap);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
@@ -206,8 +199,8 @@ namespace apiProducts.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateCPU/{id}")]
-        public Response UpdateProduct(int id, ProductsCPU updatedProduct)
+        [Route("UpdateKeyBoard/{id}")]
+        public Response UpdateProduct(int id, ProductsKeyboard updatedProduct)
         {
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
             Response response = new Response();
@@ -216,13 +209,12 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "UPDATE ProductsCPU " +
+                string query = "UPDATE ProductsKeyboard " +
                                "SET ProductName = @ProductName, Description = @Description, " +
                                "Brand = @Brand, Discount = @Discount, " +
-                               "Price = @Price, Image = @Image, BaoHanh = @BaoHanh, " +
-                               "SocKet = @SocKet, SoNhan = @SoNhan, SoLuong = @SoLuong, " +
-                               "KienTruc = @KienTruc, TocDo = @TocDo, Cache = @Cache, " +
-                               "ChipDoHoa = @ChipDoHoa, TDP = @TDP, BoNhoHoTro = @BoNhoHoTro, NgayNhap = @NgayNhap " +
+                               "Price = @Price, BaoHanh = @BaoHanh ,Image = @Image, Switch = @Switch, " +
+                               "MauSac = @MauSac, KieuKetNoi = @KieuKetNoi, DenLed = @DenLed, " +
+                               "KeTay = @KeTay, KichThuoc = @KichThuoc, Type = @Type, NgayNhap = @NgayNhap " +
                                "WHERE ProductID = @ProductID";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
@@ -233,17 +225,15 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@Brand", updatedProduct.Brand);
                     cmd.Parameters.AddWithValue("@Discount", updatedProduct.Discount);
                     cmd.Parameters.AddWithValue("@Price", updatedProduct.Price);
-                    cmd.Parameters.AddWithValue("@Image", updatedProduct.Image);
                     cmd.Parameters.AddWithValue("@BaoHanh", updatedProduct.BaoHanh);
-                    cmd.Parameters.AddWithValue("@SocKet", updatedProduct.SocKet);
-                    cmd.Parameters.AddWithValue("@SoNhan", updatedProduct.SoNhan);
-                    cmd.Parameters.AddWithValue("@SoLuong", updatedProduct.SoLuong);
-                    cmd.Parameters.AddWithValue("@KienTruc", updatedProduct.KienTruc);
-                    cmd.Parameters.AddWithValue("@TocDo", updatedProduct.TocDo);
-                    cmd.Parameters.AddWithValue("@Cache", updatedProduct.Cache);
-                    cmd.Parameters.AddWithValue("@ChipDoHoa", updatedProduct.ChipDoHoa);
-                    cmd.Parameters.AddWithValue("@TDP", updatedProduct.TDP);
-                    cmd.Parameters.AddWithValue("@BoNhoHoTro", updatedProduct.BoNhoHoTro);
+                    cmd.Parameters.AddWithValue("@Image", updatedProduct.Image);
+                    cmd.Parameters.AddWithValue("@Switch", updatedProduct.Switch);
+                    cmd.Parameters.AddWithValue("@MauSac", updatedProduct.MauSac);
+                    cmd.Parameters.AddWithValue("@KieuKetNoi", updatedProduct.KieuKetNoi);
+                    cmd.Parameters.AddWithValue("@DenLed", updatedProduct.DenLed);
+                    cmd.Parameters.AddWithValue("@KeTay", updatedProduct.KeTay);
+                    cmd.Parameters.AddWithValue("@KichThuoc", updatedProduct.KichThuoc);
+                    cmd.Parameters.AddWithValue("@Type", updatedProduct.Type);
                     cmd.Parameters.AddWithValue("@NgayNhap", updatedProduct.NgayNhap);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
@@ -274,7 +264,7 @@ namespace apiProducts.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteCPU/{id}")]
+        [Route("DeleteKeyBoard/{id}")]
         public Response DeleteProduct(int id)
         {
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
@@ -284,7 +274,7 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "DELETE FROM ProductsCPU WHERE ProductID = @ProductID";
+                string query = "DELETE FROM ProductsKeyboard WHERE ProductID = @ProductID";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
@@ -316,5 +306,6 @@ namespace apiProducts.Controllers
 
             return response;
         }
+
     }
 }
