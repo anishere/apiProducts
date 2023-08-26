@@ -48,11 +48,12 @@ namespace apiProducts.Controllers
                             SDT = Convert.ToString(row["SDT"]),
                             Address = Convert.ToString(row["Address"]),
                             Logo = Convert.ToString(row["Logo"]),
+                            Map = Convert.ToString(row["Map"]),
                         };
 
                         response.StatusCode = 200;
                         response.StatusMessage = "Product found";
-                        response.InfoShop = product;
+                        response.InfoShop = new List<InfoShop> { product };
                     }
                     else
                     {
@@ -88,7 +89,7 @@ namespace apiProducts.Controllers
                 connection.Open();
 
                 string query = "UPDATE InfoShop " +
-                               "SET SDT = @SDT, Address = @Address, Logo = @Logo " +
+                               "SET SDT = @SDT, Address = @Address, Logo = @Logo, Map = @Map " +
                                "WHERE ID = @ID";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
@@ -97,6 +98,7 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@SDT", updatedInfoShop.SDT);
                     cmd.Parameters.AddWithValue("@Address", updatedInfoShop.Address);
                     cmd.Parameters.AddWithValue("@Logo", updatedInfoShop.Logo);
+                    cmd.Parameters.AddWithValue("@Map", updatedInfoShop.Map);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
 

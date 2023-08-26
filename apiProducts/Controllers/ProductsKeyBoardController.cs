@@ -138,6 +138,40 @@ namespace apiProducts.Controllers
             return response;
         }
 
+        [HttpGet]
+        [Route("TotalCount")]
+        public Response GetTotalProductCount()
+        {
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
+            Response response = new Response();
+
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT COUNT(*) FROM ProductsKeyboard";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    int totalCount = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Total product count found";
+                    response.TotalCount = totalCount;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 500;
+                response.StatusMessage = "An error occurred: " + ex.Message;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return response;
+        }
 
         [HttpPost]
         [Route("AddKeyBoard")]

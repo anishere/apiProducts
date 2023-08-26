@@ -52,7 +52,7 @@ namespace apiProducts.Controllers
 
                         response.StatusCode = 200;
                         response.StatusMessage = "Product found";
-                        response.About = about;
+                        response.About = new List<About> { about };
                     }
                     else
                     {

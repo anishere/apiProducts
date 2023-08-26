@@ -22,8 +22,10 @@
 
         public List<Message>? listMessage { get; set; }
 
-        public InfoShop? InfoShop { get; set; }
+        public List<InfoShop>? InfoShop { get; set; }
 
-        public About? About { get; set; }
+        public List<About>? About { get; set; }
+
+        public int TotalCount { get; set; } 
     }
 }
