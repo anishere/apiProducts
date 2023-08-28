@@ -46,6 +46,8 @@
 
         public string? KieuKetNoi { get; set; }
 
+        public string? Hot { get; set; }
+
         public DateTime NgayNhap { get; set; }
     }
 }

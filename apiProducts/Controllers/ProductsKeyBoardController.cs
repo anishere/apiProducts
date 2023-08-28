@@ -47,6 +47,7 @@ namespace apiProducts.Controllers
                     products.Price = Convert.ToDecimal(dt.Rows[i]["Price"]);
                     products.BaoHanh = Convert.ToString(dt.Rows[i]["BaoHanh"]);
                     products.Image = Convert.ToString(dt.Rows[i]["Image"]);
+                    products.Type = Convert.ToString(dt.Rows[i]["Type"]);
                     products.Switch = Convert.ToString(dt.Rows[i]["Switch"]);
                     products.MauSac = Convert.ToString(dt.Rows[i]["MauSac"]);
                     products.KieuKetNoi = Convert.ToString(dt.Rows[i]["KieuKetNoi"]);

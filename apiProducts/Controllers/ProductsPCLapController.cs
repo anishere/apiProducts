@@ -18,66 +18,98 @@ namespace apiProducts.Controllers
         }
 
         [HttpGet]
-        [Route("ListLapPc")]
-        public Response GetProductsByPage(int page = 1, int pageSize = 20)
+        [Route("GetLaptops")]
+        public Response GetLaptops(int page = 1, int pageSize = 20)
         {
-            List<ProductsPcLaptop> lstproducts = new List<ProductsPcLaptop>();
+            return GetProductsByType("lap", page, pageSize);
+        }
+
+        [HttpGet]
+        [Route("GetPCs")]
+        public Response GetDesktops(int page = 1, int pageSize = 20)
+        {
+            return GetProductsByType("pc", page, pageSize);
+        }
+
+        private Response GetProductsByType(string type, int page, int pageSize)
+        {
+            List<ProductsPcLaptop> products = new List<ProductsPcLaptop>();
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
 
-            int startIndex = (page - 1) * pageSize;
-
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM ProductsPCLapTop ORDER BY ProductID OFFSET @StartIndex ROWS FETCH NEXT @PageSize ROWS ONLY", connection);
-            da.SelectCommand.Parameters.AddWithValue("@StartIndex", startIndex);
-            da.SelectCommand.Parameters.AddWithValue("@PageSize", pageSize);
-
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            Response response = new Response();
-            if (dt.Rows.Count > 0)
+            try
             {
-                for (int i = 0; i < dt.Rows.Count; i++)
+                connection.Open();
+
+                string query = "SELECT * FROM ProductsPCLapTop WHERE Type = @Type ORDER BY ProductID OFFSET @StartIndex ROWS FETCH NEXT @PageSize ROWS ONLY";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
-                    ProductsPcLaptop products = new ProductsPcLaptop();
-                    products.ProductID = Convert.ToInt32(dt.Rows[i]["ProductID"]);
-                    products.ProductName = Convert.ToString(dt.Rows[i]["ProductName"]);
-                    products.Description = Convert.ToString(dt.Rows[i]["Description"]);
-                    products.Brand = Convert.ToString(dt.Rows[i]["Brand"]);
-                    products.Discount = Convert.ToDecimal(dt.Rows[i]["Discount"]);
-                    products.Price = Convert.ToDecimal(dt.Rows[i]["Price"]);
-                    products.Image = Convert.ToString(dt.Rows[i]["Image"]);
-                    products.Type = Convert.ToString(dt.Rows[i]["Type"]);
-                    products.BaoHanh = Convert.ToString(dt.Rows[i]["BaoHanh"]);
-                    products.CPU = Convert.ToString(dt.Rows[i]["CPU"]);
-                    products.RAM = Convert.ToString(dt.Rows[i]["RAM"]);
-                    products.ManHinh = Convert.ToString(dt.Rows[i]["ManHinh"]);
-                    products.PIN = Convert.ToString(dt.Rows[i]["PIN"]);
-                    products.HeDieuHanh = Convert.ToString(dt.Rows[i]["HeDieuHanh"]);
-                    products.KhoiLuong = Convert.ToString(dt.Rows[i]["KhoiLuong"]);
-                    products.CardDoHoa = Convert.ToString(dt.Rows[i]["CardDoHoa"]);
-                    products.BanPhim = Convert.ToString(dt.Rows[i]["BanPhim"]);
-                    products.MauSac = Convert.ToString(dt.Rows[i]["MauSac"]);
-                    products.NhuCau = Convert.ToString(dt.Rows[i]["NhuCau"]);
-                    products.LuuTru = Convert.ToString(dt.Rows[i]["LuuTru"]);
-                    products.PhuKien = Convert.ToString(dt.Rows[i]["PhuKien"]);
-                    products.KieuKetNoi = Convert.ToString(dt.Rows[i]["KieuKetNoi"]);
-                    products.NgayNhap = Convert.ToDateTime(dt.Rows[i]["NgayNhap"]);
-                    lstproducts.Add(products);
+                    cmd.Parameters.AddWithValue("@Type", type);
+                    cmd.Parameters.AddWithValue("@StartIndex", (page - 1) * pageSize);
+                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ProductsPcLaptop product = new ProductsPcLaptop();
+                        product.ProductID = Convert.ToInt32(reader["ProductID"]);
+                        product.ProductName = Convert.ToString(reader["ProductName"]);
+                        product.Description = Convert.ToString(reader["Description"]);
+                        product.Brand = Convert.ToString(reader["Brand"]);
+                        product.Discount = Convert.ToDecimal(reader["Discount"]);
+                        product.Price = Convert.ToDecimal(reader["Price"]);
+                        product.Image = Convert.ToString(reader["Image"]);
+                        product.Type = Convert.ToString(reader["Type"]);
+                        product.BaoHanh = Convert.ToString(reader["BaoHanh"]);
+                        product.CPU = Convert.ToString(reader["CPU"]);
+                        product.RAM = Convert.ToString(reader["RAM"]);
+                        product.ManHinh = Convert.ToString(reader["ManHinh"]);
+                        product.PIN = Convert.ToString(reader["PIN"]);
+                        product.HeDieuHanh = Convert.ToString(reader["HeDieuHanh"]);
+                        product.KhoiLuong = Convert.ToString(reader["KhoiLuong"]);
+                        product.CardDoHoa = Convert.ToString(reader["CardDoHoa"]);
+                        product.BanPhim = Convert.ToString(reader["BanPhim"]);
+                        product.MauSac = Convert.ToString(reader["MauSac"]);
+                        product.NhuCau = Convert.ToString(reader["NhuCau"]);
+                        product.LuuTru = Convert.ToString(reader["LuuTru"]);
+                        product.PhuKien = Convert.ToString(reader["PhuKien"]);
+                        product.KieuKetNoi = Convert.ToString(reader["KieuKetNoi"]);
+                        product.Hot = Convert.ToString(reader["Hot"]);
+                        product.NgayNhap = Convert.ToDateTime(reader["NgayNhap"]);
+                        products.Add(product);
+                    }
                 }
 
-                response.StatusCode = 200;
-                response.StatusMessage = "Data found";
-                response.listproducts = lstproducts;
-            }
-            else
-            {
-                response.StatusCode = 100;
-                response.StatusMessage = "No data found";
-                response.listproducts = null;
-            }
+                Response response = new Response();
+                if (products.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Products found";
+                    response.listproducts = products;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = "No products found";
+                    response.listproducts = null;
+                }
 
-            return response;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Response response = new Response();
+                response.StatusCode = 500;
+                response.StatusMessage = "An error occurred: " + ex.Message;
+                response.listproducts = null;
+                return response;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
+
 
         [HttpGet]
         [Route("LatestLapPc")]
@@ -122,6 +154,7 @@ namespace apiProducts.Controllers
                         product.LuuTru = Convert.ToString(reader["LuuTru"]);
                         product.PhuKien = Convert.ToString(reader["PhuKien"]);
                         product.KieuKetNoi = Convert.ToString(reader["KieuKetNoi"]);
+                        product.Hot = Convert.ToString(reader["Hot"]);
                         product.NgayNhap = Convert.ToDateTime(reader["NgayNhap"]);
                         latestProducts.Add(product);
                     }
@@ -156,6 +189,84 @@ namespace apiProducts.Controllers
                 connection.Close();
             }
         }
+
+        [HttpGet]
+        [Route("HotProducts")]
+        public Response GetHotProducts()
+        {
+            List<ProductsPcLaptop> hotProducts = new List<ProductsPcLaptop>();
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
+
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM ProductsPCLapTop WHERE Hot = 'hot'";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ProductsPcLaptop product = new ProductsPcLaptop();
+                        product.ProductID = Convert.ToInt32(reader["ProductID"]);
+                        product.ProductName = Convert.ToString(reader["ProductName"]);
+                        product.Description = Convert.ToString(reader["Description"]);
+                        product.Brand = Convert.ToString(reader["Brand"]);
+                        product.Discount = Convert.ToDecimal(reader["Discount"]);
+                        product.Price = Convert.ToDecimal(reader["Price"]);
+                        product.Image = Convert.ToString(reader["Image"]);
+                        product.Type = Convert.ToString(reader["Type"]);
+                        product.BaoHanh = Convert.ToString(reader["BaoHanh"]);
+                        product.CPU = Convert.ToString(reader["CPU"]);
+                        product.RAM = Convert.ToString(reader["RAM"]);
+                        product.ManHinh = Convert.ToString(reader["ManHinh"]);
+                        product.PIN = Convert.ToString(reader["PIN"]);
+                        product.HeDieuHanh = Convert.ToString(reader["HeDieuHanh"]);
+                        product.KhoiLuong = Convert.ToString(reader["KhoiLuong"]);
+                        product.CardDoHoa = Convert.ToString(reader["CardDoHoa"]);
+                        product.BanPhim = Convert.ToString(reader["BanPhim"]);
+                        product.MauSac = Convert.ToString(reader["MauSac"]);
+                        product.NhuCau = Convert.ToString(reader["NhuCau"]);
+                        product.LuuTru = Convert.ToString(reader["LuuTru"]);
+                        product.PhuKien = Convert.ToString(reader["PhuKien"]);
+                        product.KieuKetNoi = Convert.ToString(reader["KieuKetNoi"]);
+                        product.Hot = Convert.ToString(reader["Hot"]);
+                        product.NgayNhap = Convert.ToDateTime(reader["NgayNhap"]);
+                        hotProducts.Add(product);
+                    }
+                }
+
+                Response response = new Response();
+                if (hotProducts.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Hot products found";
+                    response.listproducts = hotProducts;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = "No hot products found";
+                    response.listproducts = null;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Response response = new Response();
+                response.StatusCode = 500;
+                response.StatusMessage = "An error occurred: " + ex.Message;
+                response.listproducts = null;
+                return response;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
 
         [HttpGet]
         [Route("GetLapPcById/{id}")]
@@ -204,7 +315,8 @@ namespace apiProducts.Controllers
                             NhuCau = Convert.ToString(row["NhuCau"]),
                             LuuTru = Convert.ToString(row["LuuTru"]),
                             PhuKien = Convert.ToString(row["PhuKien"]),
-                            KieuKetNoi = Convert.ToString(row["KieuKetNoi"])
+                            KieuKetNoi = Convert.ToString(row["KieuKetNoi"]),
+                            Hot = Convert.ToString(row["Hot"])
                         };
 
                         response.StatusCode = 200;
@@ -279,8 +391,8 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "INSERT INTO ProductsPCLapTop (ProductName, Description, Brand, Discount, Price, Image, Type, BaoHanh, CPU, RAM, ManHinh, PIN, HeDieuHanh, KhoiLuong, CardDoHoa, BanPhim, MauSac, NhuCau, LuuTru, PhuKien, KieuKetNoi, NgayNhap) " +
-                               "VALUES (@ProductName, @Description, @Brand, @Discount, @Price, @Image, @Type, @BaoHanh, @CPU, @RAM, @ManHinh, @PIN, @HeDieuHanh, @KhoiLuong, @CardDoHoa, @BanPhim, @MauSac, @NhuCau, @LuuTru, @PhuKien, @KieuKetNoi, @NgayNhap)";
+                string query = "INSERT INTO ProductsPCLapTop (ProductName, Description, Brand, Discount, Price, Image, Type, BaoHanh, CPU, RAM, ManHinh, PIN, HeDieuHanh, KhoiLuong, CardDoHoa, BanPhim, MauSac, NhuCau, LuuTru, PhuKien, KieuKetNoi, Hot, NgayNhap) " +
+                               "VALUES (@ProductName, @Description, @Brand, @Discount, @Price, @Image, @Type, @BaoHanh, @CPU, @RAM, @ManHinh, @PIN, @HeDieuHanh, @KhoiLuong, @CardDoHoa, @BanPhim, @MauSac, @NhuCau, @LuuTru, @PhuKien, @KieuKetNoi, @Hot, @NgayNhap)";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
@@ -305,6 +417,7 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@LuuTru", obj.LuuTru);
                     cmd.Parameters.AddWithValue("@PhuKien", obj.PhuKien);
                     cmd.Parameters.AddWithValue("@KieuKetNoi", obj.KieuKetNoi);
+                    cmd.Parameters.AddWithValue("@Hot", obj.Hot);
                     cmd.Parameters.AddWithValue("@NgayNhap", obj.NgayNhap);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
@@ -396,7 +509,7 @@ namespace apiProducts.Controllers
                                "BaoHanh = @BaoHanh, CPU = @CPU, RAM = @RAM, " +
                                "ManHinh = @ManHinh, PIN = @PIN, HeDieuHanh = @HeDieuHanh, KhoiLuong = @KhoiLuong, " +
                                "CardDoHoa = @CardDoHoa, BanPhim = @BanPhim, MauSac = @MauSac, " +
-                               "NhuCau = @NhuCau, LuuTru = @LuuTru, PhuKien = @PhuKien, KieuKetNoi = @KieuKetNoi, NgayNhap = @NgayNhap " +
+                               "NhuCau = @NhuCau, LuuTru = @LuuTru, PhuKien = @PhuKien, KieuKetNoi = @KieuKetNoi, Hot = @Hot, NgayNhap = @NgayNhap " +
                                "WHERE ProductID = @ProductID";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
@@ -423,6 +536,7 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@LuuTru", updatedProduct.LuuTru);
                     cmd.Parameters.AddWithValue("@PhuKien", updatedProduct.PhuKien);
                     cmd.Parameters.AddWithValue("@KieuKetNoi", updatedProduct.KieuKetNoi);
+                    cmd.Parameters.AddWithValue("@Hot", updatedProduct.Hot);
                     cmd.Parameters.AddWithValue("@NgayNhap", updatedProduct.NgayNhap);
 
                     int rowsAffected = cmd.ExecuteNonQuery();

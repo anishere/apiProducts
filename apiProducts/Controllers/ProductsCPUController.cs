@@ -48,6 +48,7 @@ namespace apiProducts.Controllers
                     products.Price = Convert.ToDecimal(dt.Rows[i]["Price"]);
                     products.Image = Convert.ToString(dt.Rows[i]["Image"]);
                     products.BaoHanh = Convert.ToString(dt.Rows[i]["BaoHanh"]);
+                    products.Type = Convert.ToString(dt.Rows[i]["Type"]);
                     products.SocKet = Convert.ToString(dt.Rows[i]["SocKet"]);
                     products.SoNhan = Convert.ToString(dt.Rows[i]["SoNhan"]);
                     products.SoLuong = Convert.ToString(dt.Rows[i]["SoLuong"]);
@@ -104,6 +105,7 @@ namespace apiProducts.Controllers
                         product.Discount = Convert.ToDecimal(reader["Discount"]);
                         product.Price = Convert.ToDecimal(reader["Price"]);
                         product.Image = Convert.ToString(reader["Image"]);
+                        product.Type = Convert.ToString(reader["Type"]);
                         product.BaoHanh = Convert.ToString(reader["BaoHanh"]);
                         product.SocKet = Convert.ToString(reader["SocKet"]);
                         product.SoNhan = Convert.ToString(reader["SoNhan"]);
@@ -189,8 +191,8 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "INSERT INTO ProductsCPU (ProductName, Description, Brand, Discount, Price, Image, BaoHanh, SocKet, SoNhan, SoLuong, KienTruc, TocDo, Cache, ChipDoHoa, TDP, BoNhoHoTro, NgayNhap) " +
-                               "VALUES (@ProductName, @Description, @Brand, @Discount, @Price, @Image, @BaoHanh, @SocKet, @SoNhan, @SoLuong, @KienTruc, @TocDo, @Cache, @ChipDoHoa, @TDP, @BoNhoHoTro, @NgayNhap)";
+                string query = "INSERT INTO ProductsCPU (ProductName, Description, Brand, Discount, Price, Image, BaoHanh, Type, SocKet, SoNhan, SoLuong, KienTruc, TocDo, Cache, ChipDoHoa, TDP, BoNhoHoTro, NgayNhap) " +
+                               "VALUES (@ProductName, @Description, @Brand, @Discount, @Price, @Image, @BaoHanh, @Type, @SocKet, @SoNhan, @SoLuong, @KienTruc, @TocDo, @Cache, @ChipDoHoa, @TDP, @BoNhoHoTro, @NgayNhap)";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
@@ -200,6 +202,7 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@Discount", obj.Discount);
                     cmd.Parameters.AddWithValue("@Price", obj.Price);
                     cmd.Parameters.AddWithValue("@Image", obj.Image);
+                    cmd.Parameters.AddWithValue("@Type", obj.Type);
                     cmd.Parameters.AddWithValue("@BaoHanh", obj.BaoHanh);
                     cmd.Parameters.AddWithValue("@SocKet", obj.SocKet);
                     cmd.Parameters.AddWithValue("@SoNhan", obj.SoNhan);
@@ -253,7 +256,7 @@ namespace apiProducts.Controllers
                 string query = "UPDATE ProductsCPU " +
                                "SET ProductName = @ProductName, Description = @Description, " +
                                "Brand = @Brand, Discount = @Discount, " +
-                               "Price = @Price, Image = @Image, BaoHanh = @BaoHanh, " +
+                               "Price = @Price, Image = @Image, Type = @Type, BaoHanh = @BaoHanh, " +
                                "SocKet = @SocKet, SoNhan = @SoNhan, SoLuong = @SoLuong, " +
                                "KienTruc = @KienTruc, TocDo = @TocDo, Cache = @Cache, " +
                                "ChipDoHoa = @ChipDoHoa, TDP = @TDP, BoNhoHoTro = @BoNhoHoTro, NgayNhap = @NgayNhap " +
@@ -268,6 +271,7 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@Discount", updatedProduct.Discount);
                     cmd.Parameters.AddWithValue("@Price", updatedProduct.Price);
                     cmd.Parameters.AddWithValue("@Image", updatedProduct.Image);
+                    cmd.Parameters.AddWithValue("@Type", updatedProduct.Type);
                     cmd.Parameters.AddWithValue("@BaoHanh", updatedProduct.BaoHanh);
                     cmd.Parameters.AddWithValue("@SocKet", updatedProduct.SocKet);
                     cmd.Parameters.AddWithValue("@SoNhan", updatedProduct.SoNhan);

@@ -18,6 +18,8 @@
 
         public string? BaoHanh { get; set; }
 
+        public string? Type { get; set; }
+
         public string? DenLed { get; set; }
 
         public string? SocKet { get; set; }

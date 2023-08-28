@@ -16,6 +16,8 @@
 
         public string? Image { get; set; }
 
+        public string? KeyBoard { get; set; }
+
         public string? BaoHanh { get; set; }
 
         public string? Switch { get; set; }
