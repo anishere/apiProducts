@@ -40,3 +40,6 @@ D:\Asp.net\apiProducts\apiProducts\bin\Debug\net6.0\Microsoft.IdentityModel.Abst
 D:\Asp.net\apiProducts\apiProducts\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
 D:\Asp.net\apiProducts\apiProducts\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
 D:\Asp.net\apiProducts\apiProducts\bin\Debug\net6.0\System.Security.Permissions.dll
+D:\Asp.net\apiProducts\apiProducts\obj\Debug\net6.0\apiProducts.sourcelink.json
+D:\Asp.net\apiProducts\apiProducts\bin\Debug\net6.0\BCrypt.Net-Next.dll
+D:\Asp.net\apiProducts\apiProducts\bin\Debug\net6.0\BCrypt.Net-Core.dll

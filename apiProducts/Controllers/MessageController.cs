@@ -39,6 +39,7 @@ namespace apiProducts.Controllers
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     Message mess = new Message();
+                    mess.Id = Convert.ToInt32(dt.Rows[i]["ID"]);
                     mess.Ten = Convert.ToString(dt.Rows[i]["Ten"]);
                     mess.Email = Convert.ToString(dt.Rows[i]["Email"]);
                     mess.SDT = Convert.ToString(dt.Rows[i]["SDT"]);

@@ -18,6 +18,173 @@ namespace apiProducts.Controllers
         }
 
         [HttpGet]
+        [Route("GetLaptopsBrand")]
+        public Response GetLaptops(int page = 1, int pageSize = 20, string brand = null)
+        {
+            List<ProductsPcLaptop> products = new List<ProductsPcLaptop>();
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
+            Response response = new Response();
+
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM ProductsPCLapTop";
+                if (!string.IsNullOrEmpty(brand))
+                {
+                    query += " WHERE Brand = @Brand";
+                }
+                query += " ORDER BY ProductID OFFSET @StartIndex ROWS FETCH NEXT @PageSize ROWS ONLY";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    if (!string.IsNullOrEmpty(brand))
+                    {
+                        cmd.Parameters.AddWithValue("@Brand", brand);
+                    }
+                    cmd.Parameters.AddWithValue("@StartIndex", (page - 1) * pageSize);
+                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ProductsPcLaptop product = new ProductsPcLaptop();
+                        product.ProductID = Convert.ToInt32(reader["ProductID"]);
+                        product.ProductName = Convert.ToString(reader["ProductName"]);
+                        product.Description = Convert.ToString(reader["Description"]);
+                        product.Brand = Convert.ToString(reader["Brand"]);
+                        product.Discount = Convert.ToDecimal(reader["Discount"]);
+                        product.Price = Convert.ToDecimal(reader["Price"]);
+                        product.Image = Convert.ToString(reader["Image"]);
+                        product.Type = Convert.ToString(reader["Type"]);
+                        product.BaoHanh = Convert.ToString(reader["BaoHanh"]);
+                        product.CPU = Convert.ToString(reader["CPU"]);
+                        product.RAM = Convert.ToString(reader["RAM"]);
+                        product.ManHinh = Convert.ToString(reader["ManHinh"]);
+                        product.PIN = Convert.ToString(reader["PIN"]);
+                        product.HeDieuHanh = Convert.ToString(reader["HeDieuHanh"]);
+                        product.KhoiLuong = Convert.ToString(reader["KhoiLuong"]);
+                        product.CardDoHoa = Convert.ToString(reader["CardDoHoa"]);
+                        product.BanPhim = Convert.ToString(reader["BanPhim"]);
+                        product.MauSac = Convert.ToString(reader["MauSac"]);
+                        product.NhuCau = Convert.ToString(reader["NhuCau"]);
+                        product.LuuTru = Convert.ToString(reader["LuuTru"]);
+                        product.PhuKien = Convert.ToString(reader["PhuKien"]);
+                        product.KieuKetNoi = Convert.ToString(reader["KieuKetNoi"]);
+                        product.Hot = Convert.ToString(reader["Hot"]);
+                        product.NgayNhap = Convert.ToDateTime(reader["NgayNhap"]);
+                        products.Add(product);
+                    }
+                }
+
+                if (products.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Products found";
+                    response.listproducts = products;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = "No products found";
+                    response.listproducts = null;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 500;
+                response.StatusMessage = "An error occurred: " + ex.Message;
+                response.listproducts = null;
+                return response;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAllProducts")]
+        public Response GetAllProducts()
+        {
+            List<ProductsPcLaptop> products = new List<ProductsPcLaptop>();
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
+
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM ProductsPCLapTop ORDER BY ProductID";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ProductsPcLaptop product = new ProductsPcLaptop();
+                        product.ProductID = Convert.ToInt32(reader["ProductID"]);
+                        product.ProductName = Convert.ToString(reader["ProductName"]);
+                        product.Description = Convert.ToString(reader["Description"]);
+                        product.Brand = Convert.ToString(reader["Brand"]);
+                        product.Discount = Convert.ToDecimal(reader["Discount"]);
+                        product.Price = Convert.ToDecimal(reader["Price"]);
+                        product.Image = Convert.ToString(reader["Image"]);
+                        product.Type = Convert.ToString(reader["Type"]);
+                        product.BaoHanh = Convert.ToString(reader["BaoHanh"]);
+                        product.CPU = Convert.ToString(reader["CPU"]);
+                        product.RAM = Convert.ToString(reader["RAM"]);
+                        product.ManHinh = Convert.ToString(reader["ManHinh"]);
+                        product.PIN = Convert.ToString(reader["PIN"]);
+                        product.HeDieuHanh = Convert.ToString(reader["HeDieuHanh"]);
+                        product.KhoiLuong = Convert.ToString(reader["KhoiLuong"]);
+                        product.CardDoHoa = Convert.ToString(reader["CardDoHoa"]);
+                        product.BanPhim = Convert.ToString(reader["BanPhim"]);
+                        product.MauSac = Convert.ToString(reader["MauSac"]);
+                        product.NhuCau = Convert.ToString(reader["NhuCau"]);
+                        product.LuuTru = Convert.ToString(reader["LuuTru"]);
+                        product.PhuKien = Convert.ToString(reader["PhuKien"]);
+                        product.KieuKetNoi = Convert.ToString(reader["KieuKetNoi"]);
+                        product.Hot = Convert.ToString(reader["Hot"]);
+                        product.NgayNhap = Convert.ToDateTime(reader["NgayNhap"]);
+                        products.Add(product);
+                    }
+                }
+
+                Response response = new Response();
+                if (products.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Products found";
+                    response.listproducts = products;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = "No products found";
+                    response.listproducts = null;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Response response = new Response();
+                response.StatusCode = 500;
+                response.StatusMessage = "An error occurred: " + ex.Message;
+                response.listproducts = null;
+                return response;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+
+
+        [HttpGet]
         [Route("GetLaptops")]
         public Response GetLaptops(int page = 1, int pageSize = 20)
         {
@@ -316,8 +483,9 @@ namespace apiProducts.Controllers
                             LuuTru = Convert.ToString(row["LuuTru"]),
                             PhuKien = Convert.ToString(row["PhuKien"]),
                             KieuKetNoi = Convert.ToString(row["KieuKetNoi"]),
-                            Hot = Convert.ToString(row["Hot"])
-                        };
+                            Hot = Convert.ToString(row["Hot"]),
+                            NgayNhap = Convert.ToDateTime(row["NgayNhap"])
+                    };
 
                         response.StatusCode = 200;
                         response.StatusMessage = "Product found";
@@ -378,6 +546,86 @@ namespace apiProducts.Controllers
 
             return response;
         }
+
+        [HttpGet]
+        [Route("ProductCountByBrand/{brand}")]
+        public Response GetProductCountByBrand(string brand)
+        {
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
+            Response response = new Response();
+
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT COUNT(*) FROM ProductsPCLapTop WHERE Brand = @Brand";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Brand", brand);
+
+                    int brandProductCount = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Product count by brand found";
+                    response.BrandProductCount = brandProductCount;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 500;
+                response.StatusMessage = "An error occurred: " + ex.Message;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return response;
+        }
+
+
+        [HttpGet]
+        [Route("GetBrands")]
+        public Response GetBrands()
+        {
+            List<string> brands = new List<string>();
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
+            Response response = new Response();
+
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT DISTINCT Brand FROM ProductsPCLapTop";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        string brand = Convert.ToString(reader["Brand"]);
+                        brands.Add(brand);
+                    }
+                }
+
+                response.StatusCode = 200;
+                response.StatusMessage = "Brands found";
+                response.Brands = brands;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = 500;
+                response.StatusMessage = "An error occurred: " + ex.Message;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return response;
+        }
+
 
         [HttpPost]
         [Route("AddLapPc")]

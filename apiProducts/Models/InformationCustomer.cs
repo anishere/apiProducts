@@ -2,6 +2,7 @@
 {
     public class InformationCustomer
     {
+        public int ID { get; set;}
         public string? PhoneNumber { get; set; }
 
         public string? Name { get; set; }

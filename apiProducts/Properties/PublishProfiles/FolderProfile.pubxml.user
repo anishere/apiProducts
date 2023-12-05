@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\Users\acer\Desktop\Publish</_PublishTargetUrl>
+    <History>True|2023-08-28T13:53:17.4955511Z;True|2023-08-28T20:42:17.2318579+07:00;True|2023-08-28T18:04:40.5562700+07:00;True|2023-08-28T18:04:29.0641606+07:00;True|2023-08-28T17:57:12.4990552+07:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="Product">
+      <Value>Data Source=mssql-142208-0.cloudclusters.net,12219%3bInitial Catalog=ProductsDB%3bUser=admin%3bPassword=1372003St%3bTrustServerCertificate=True</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

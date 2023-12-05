@@ -27,5 +27,9 @@
         public List<About>? About { get; set; }
 
         public int TotalCount { get; set; } 
+
+        public List<string> Brands {  get; set; }
+
+        public int BrandProductCount { get; set; }
     }
 }

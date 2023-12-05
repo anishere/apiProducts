@@ -46,7 +46,7 @@ namespace apiProducts.Controllers
                         DataRow row = dt.Rows[0];
                         About about = new About()
                         {
-                            About1 = Convert.ToString(row["About2"]),
+                            About1 = Convert.ToString(row["About1"]),
                             About2 = Convert.ToString(row["About2"]),
                         };
 

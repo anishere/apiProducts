@@ -6,6 +6,7 @@ using apiProducts.Models;
 using System.Security.Principal;
 using System.Collections.Generic;
 using Microsoft.VisualBasic;
+using BCrypt.Net;
 
 namespace apiProducts.Controllers
 {
@@ -50,7 +51,7 @@ namespace apiProducts.Controllers
             da.SelectCommand.Parameters.AddWithValue("@UserName", "admin");
             DataTable dt = new DataTable();
             da.Fill(dt);
-            if (dt.Rows.Count >= 0)
+            if (dt.Rows.Count >= 0) 
             {
                 return true;
             }

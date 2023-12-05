@@ -48,7 +48,7 @@ namespace apiProducts.Controllers
                     products.Image = Convert.ToString(dt.Rows[i]["Image"]);
                     products.BaoHanh = Convert.ToString(dt.Rows[i]["BaoHanh"]);
                     products.MauSac = Convert.ToString(dt.Rows[i]["MauSac"]);
-                    products.NhuCau = Convert.ToString(dt.Rows[i]["KieuKetNoi"]);
+                    products.KieuKetNoi = Convert.ToString(dt.Rows[i]["KieuKetNoi"]);
                     products.NhuCau = Convert.ToString(dt.Rows[i]["NhuCau"]);
                     products.KieuCam = Convert.ToString(dt.Rows[i]["KieuCam"]);
                     products.SoNutBam = Convert.ToString(dt.Rows[i]["SoNutBam"]);
@@ -108,6 +108,7 @@ namespace apiProducts.Controllers
                         product.Image = Convert.ToString(reader["Image"]);
                         product.BaoHanh = Convert.ToString(reader["BaoHanh"]);
                         product.MauSac = Convert.ToString(reader["MauSac"]);
+                        product.KieuKetNoi = Convert.ToString(reader["KieuKetNoi"]);
                         product.NhuCau = Convert.ToString(reader["NhuCau"]);
                         product.KieuCam = Convert.ToString(reader["KieuCam"]);
                         product.SoNutBam = Convert.ToString(reader["SoNutBam"]);
@@ -193,8 +194,8 @@ namespace apiProducts.Controllers
             {
                 connection.Open();
 
-                string query = "INSERT INTO ProductsMouse (ProductName, Description, Brand, Discount, Price, Image, BaoHanh, MauSac, NhuCau, KieuCam, SoNutBam, DenLed, KichThuoc, KhoiLuong, DoPhanGiai, DangCamBien, DoNhay, Type, NgayNhap) " +
-                               "VALUES (@ProductName, @Description, @Brand, @Discount, @Price, @Image, @BaoHanh, @MauSac, @NhuCau, @KieuCam, @SoNutBam, @DenLed, @KichThuoc, @KhoiLuong, @DoPhanGiai, @DangCamBien, @DoNhay, @Type, @NgayNhap)";
+                string query = "INSERT INTO ProductsMouse (ProductName, Description, Brand, Discount, Price, Image, BaoHanh, MauSac, KieuKetNoi, NhuCau, KieuCam, SoNutBam, DenLed, KichThuoc, KhoiLuong, DoPhanGiai, DangCamBien, DoNhay, Type, NgayNhap) " +
+                               "VALUES (@ProductName, @Description, @Brand, @Discount, @Price, @Image, @BaoHanh, @MauSac, @KieuKetNoi, @NhuCau, @KieuCam, @SoNutBam, @DenLed, @KichThuoc, @KhoiLuong, @DoPhanGiai, @DangCamBien, @DoNhay, @Type, @NgayNhap)";
 
                 using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
@@ -206,6 +207,7 @@ namespace apiProducts.Controllers
                     cmd.Parameters.AddWithValue("@Image", obj.Image);
                     cmd.Parameters.AddWithValue("@BaoHanh", obj.BaoHanh);
                     cmd.Parameters.AddWithValue("@MauSac", obj.MauSac);
+                    cmd.Parameters.AddWithValue("@KieuKetNoi", obj.KieuKetNoi);
                     cmd.Parameters.AddWithValue("@NhuCau", obj.NhuCau);
                     cmd.Parameters.AddWithValue("@KieuCam", obj.KieuCam);
                     cmd.Parameters.AddWithValue("@SoNutBam", obj.SoNutBam);
