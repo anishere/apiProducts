@@ -182,7 +182,85 @@ namespace apiProducts.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("SearchProducts")]
+        public Response SearchProducts(string keyword)
+        {
+            List<ProductsPcLaptop> products = new List<ProductsPcLaptop>();
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Product").ToString());
 
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM ProductsPCLapTop WHERE ProductName LIKE @Keyword ORDER BY ProductID";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Keyword", $"%{keyword}%");
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ProductsPcLaptop product = new ProductsPcLaptop();
+                        product.ProductID = Convert.ToInt32(reader["ProductID"]);
+                        product.ProductName = Convert.ToString(reader["ProductName"]);
+                        product.Description = Convert.ToString(reader["Description"]);
+                        product.Brand = Convert.ToString(reader["Brand"]);
+                        product.Discount = Convert.ToDecimal(reader["Discount"]);
+                        product.Price = Convert.ToDecimal(reader["Price"]);
+                        product.Image = Convert.ToString(reader["Image"]);
+                        product.Type = Convert.ToString(reader["Type"]);
+                        product.BaoHanh = Convert.ToString(reader["BaoHanh"]);
+                        product.CPU = Convert.ToString(reader["CPU"]);
+                        product.RAM = Convert.ToString(reader["RAM"]);
+                        product.ManHinh = Convert.ToString(reader["ManHinh"]);
+                        product.PIN = Convert.ToString(reader["PIN"]);
+                        product.HeDieuHanh = Convert.ToString(reader["HeDieuHanh"]);
+                        product.KhoiLuong = Convert.ToString(reader["KhoiLuong"]);
+                        product.CardDoHoa = Convert.ToString(reader["CardDoHoa"]);
+                        product.BanPhim = Convert.ToString(reader["BanPhim"]);
+                        product.MauSac = Convert.ToString(reader["MauSac"]);
+                        product.NhuCau = Convert.ToString(reader["NhuCau"]);
+                        product.LuuTru = Convert.ToString(reader["LuuTru"]);
+                        product.PhuKien = Convert.ToString(reader["PhuKien"]);
+                        product.KieuKetNoi = Convert.ToString(reader["KieuKetNoi"]);
+                        product.Hot = Convert.ToString(reader["Hot"]);
+                        product.NgayNhap = Convert.ToDateTime(reader["NgayNhap"]);
+
+                        products.Add(product);
+                    }
+                }
+
+                Response response = new Response();
+                if (products.Count > 0)
+                {
+                    response.StatusCode = 200;
+                    response.StatusMessage = "Products found";
+                    response.listproducts = products;
+                }
+                else
+                {
+                    response.StatusCode = 100;
+                    response.StatusMessage = "No products found";
+                    response.listproducts = null;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Response response = new Response();
+                response.StatusCode = 500;
+                response.StatusMessage = "An error occurred: " + ex.Message;
+                response.listproducts = null;
+                return response;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
 
         [HttpGet]
         [Route("GetLaptops")]
